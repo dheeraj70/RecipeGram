@@ -1,0 +1,90 @@
+::-moz-selection { /* Code for Firefox */
+    color: rgb(255, 255, 255);
+    background: rgb(69, 69, 69);
+  }
+  
+  ::selection {
+    color: rgb(255, 255, 255);
+    background: rgb(69, 69, 69);
+  }
+  [data-placeholder]:empty:before{
+    content: attr(data-placeholder);
+    color: #888;
+    font-style: italic;
+   
+  }
+.post{
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 30px 10px 30px 10px;
+    height: max-content;
+    width: 70%;
+    background-color: rgb(191, 191, 191);
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+}
+
+.opts{
+    background-color: rgb(139, 139, 139);
+    height: 45px;
+    border-radius: 15px;
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-around;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  
+}
+.post-input{
+    background-color: white;
+    height: max-content;
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 100%;
+    
+
+}
+.post-input:focus{
+    outline: none;
+}
+
+.cur-point{
+    cursor: pointer;
+}
+.drop-h1{
+    font-size: 23px;
+}
+.drop-h2{
+    font-size: 19px;
+}
+.drop-h3{
+    font-size: 17px;
+}
+
+.img-adjustment{
+    height: 100%;
+    width: 100%;
+}
+
+.img-container{
+    
+    padding: 10px 30% 10px 30%;
+
+}
+.initial{
+    display: inline;
+}
+.vid-container{
+    
+    padding: 10px 20% 10px 20%;
+    height: 300px;
+}
+.sub{
+    margin-top: 30px;
+    text-align: center;
+}
