@@ -1,0 +1,109 @@
+.login{
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-left: 7%;
+  padding-right: 7%;
+  justify-content: center;
+}
+
+
+.log{
+  display: flex;
+}
+.logimg{
+  background-image: url('../public/cook.jpg');
+  width: 55%;
+  background-size:cover;
+}
+.loginlogo{
+  margin-bottom: 50px;
+}
+.logsub{
+  margin-top: 30px;
+  height: 50px;
+  width: 100%;
+}
+.or{
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+}
+.line{
+  background-color: rgb(160, 160, 160);
+  height: 0.5px;
+  width: 100%;
+}
+.orl{
+  position: relative;
+  top:5px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+.backbtn{
+  border: 0;
+  background-color: white;
+  font-size: 30px;
+  width: 10%;
+  position: relative;
+  bottom: 30px;
+}
+.nav{
+background-color: rgb(226, 226, 226);
+  height: 10vh;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  align-items: center;
+}
+.nav_logo{
+  max-width: calc(100% - 10px);
+    max-height: calc(100% - 10px);
+}
+.nav_elements{
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  align-items: center;
+}
+.navbtn{
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px 20px 20px 20px;
+  height: fit-content;
+  border: none;
+  font-size: 20px;
+
+}
+.profile_pic{
+ 
+  height: 2vw;
+  border-radius: 100%;
+}
+.txtac{
+  display: flex;
+  align-items: center;
+}
+.drop{
+  height: 150px;
+  width: 120px;
+  background-color: rgb(79, 79, 79);
+  position: absolute;
+  top: 32px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+}
+.posr{
+  position: relative;
+}
+.dropbtn{
+ 
+  background-color: rgb(199, 199, 199);
+  border: none;
+  padding-top: 12.5px;
+  padding-bottom: 12.5px;
+}
