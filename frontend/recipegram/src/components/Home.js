@@ -102,7 +102,7 @@ export default function Home() {
       case 'myPosts':
         return <MyPosts/>;
       case 'post':
-        return <Post />;
+        return <Post moveToFeed={()=>{setActiveTab('feed')}}/>;
       case 'profile':
         return <Profile />;
       default:

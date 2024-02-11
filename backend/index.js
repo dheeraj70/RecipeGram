@@ -1,12 +1,14 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const mysql = require('mysql2');
+const multer = require('multer');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const passport = require('passport');
 const { Strategy } =require('passport-local');
 const cors = require('cors')
 const store = new session.MemoryStore();
+const path = require('path');
 
 const app = express();
 const port = 8080;
@@ -50,6 +52,19 @@ const db = mysql.createConnection({
     }
     console.log('Connected to MySQL database');
   });
+
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now() +path.extname(file.originalname))
+    }
+  });
+  
+  const upload = multer({ storage: storage });
+  
+  app.use(express.static('uploads'));
 /*
 app.get('/',(req,res)=>{
     res.send('/view/');
@@ -65,13 +80,26 @@ app.get('/register',(req,res)=>{
 */
 
 
-
-app.get('/',(req,res)=>{
+//Middlewares
+const isAuthenticated = (req,res,next)=>{
   if(req.isAuthenticated()){
-    res.status(200).json({ message: "Everything is good, youu"+req.user.username , userr: req.session.passport.user });
+    next();
   }else{
-    res.status(401).json({messsage: "not logged in!"})
+    res.status(401).json({message: "Not authorised"});
   }
+  
+}
+
+
+
+
+
+//Routes
+
+app.get('/',isAuthenticated,(req,res)=>{
+  
+    res.status(200).json({ message: "Everything is good, youu"+req.user.username , userr: req.session.passport.user });
+  
 })
 
 app.post('/register',async (req,res)=>{
@@ -145,6 +173,45 @@ app.delete("/logout", (req, res)=>{
   
   
 })
+
+
+app.post('/upload-image', isAuthenticated,upload.single('image'), (req, res) => {
+  // Multer has saved the image to the 'uploads' directory
+  // You can access the uploaded file via req.file
+  // In this example, we'll simply return the URL of the uploaded image
+  console.log(req.file);
+  const imageUrl = `http://localhost:${port}/${req.file.filename}`;
+  res.send(imageUrl);
+});
+
+app.post('/upload-post', isAuthenticated, async (req, res) => {
+  try {
+    //console.log('yes')
+    const cont = req.body;
+    const user_id = req.session.passport.user.id;
+    // Check if the user_id exists in the database
+    const [rows, fields] = await db.promise().query('SELECT * FROM subscribe.posts WHERE user_id = ?', [user_id]);
+    
+    if (rows.length === 0) {
+      // If user_id not present, add a new row for the user
+      await db.promise().query('INSERT INTO subscribe.posts (user_id, post_text) VALUES (?, ?)', [user_id, JSON.stringify([cont])]);
+    } else {
+      // If user_id already present, fetch existing post_text and prepend new content
+      const [userData] = rows;
+      const existingPosts = JSON.parse(userData.post_text);
+      existingPosts.unshift(cont);
+      // Update the existing row with the updated post_text
+      await db.promise().query('UPDATE subscribe.posts SET post_text = ? WHERE user_id = ?', [JSON.stringify(existingPosts), user_id]);
+    }
+
+
+    res.status(200).json({ 'message': 'Post uploaded successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ 'message': 'Server Error' });
+  }
+});
+
 
 passport.use(new Strategy(async function verify(username,password,cb){
     console.log(username)

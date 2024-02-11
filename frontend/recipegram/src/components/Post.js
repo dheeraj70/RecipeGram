@@ -1,20 +1,79 @@
 import React,{useEffect, useRef, useState} from 'react';
+import { useNavigate} from 'react-router-dom';
 import './Post.css';
 
-export default function Post() {
-  //const [textFieldEmpty,changetFE] = useState(true);
-
+export default function Post(props) {
+  //const [imgs,setImgs] = useState([]);
+  const navigate = useNavigate();
   const inputRef = useRef(null);
- 
+  
 
     useEffect(() => {
         inputRef.current.focus();
         
     }, [inputRef]);
 
-    const SubmitPost =()=>{
+    const SubmitPost =async ()=>{
       var content = inputRef.current.innerHTML;
       console.log(content);
+
+//Submit all the images in container
+      const images = inputRef.current.querySelectorAll('img');
+      
+      const imageUrls = [];
+
+      for (const image of images) {
+        //getting image src in blob
+        const imageUrl = image.src;
+    //retreiving file name from data-filename attribute of image
+        const filename = image.dataset.filename;
+
+    //fetching image locally
+    const response = await fetch(imageUrl);
+    //getting the response as blob
+    const blob = await response.blob();
+
+    //creating a new file from the blob
+    const file = new File([blob], filename, { type: blob.type });
+    //console.log(filename);
+    
+    //creating a FormData object to post to server
+    const formData = new FormData();
+    // form name set to 'image' since server accepts upload.single('image');
+    formData.append('image', file, filename);
+    const res = await fetch('http://localhost:8080/upload-image', {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+      
+    });
+    const Url = await res.text();
+    //changing the src of each img to the new url which is fetched from server
+    image.src = Url;
+    imageUrls.push(Url);
+  }
+  console.log(imageUrls);
+
+      content = inputRef.current.innerHTML;
+      console.log(content);
+
+      const contentPostResponse = await fetch('http://localhost:8080/upload-post',{
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({'content' :content})
+      }).then((res)=>{
+        alert("You have successfully Posted");
+        props.moveToFeed();
+
+    }).
+      catch((err)=>{
+        alert(err)
+      })
+      
+      
     }
   
 //yt embed convert
@@ -67,9 +126,11 @@ export default function Post() {
 
     const UpImg = (e)=>{
       const imga = e.target.files[0];
+      
 
-      var newImg = document.createElement('img');
+      if(imga){var newImg = document.createElement('img');
       newImg.setAttribute("src", URL.createObjectURL(imga));
+      newImg.setAttribute("data-filename", imga.name);
       newImg.classList.add('img-adjustment');
 
       
@@ -99,6 +160,8 @@ export default function Post() {
     window.getSelection().removeAllRanges();
     window.getSelection().addRange(newRange);
  
+}
+   
     }
 
   const createHeading = (heading)=>{
