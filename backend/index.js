@@ -91,6 +91,17 @@ const isAuthenticated = (req,res,next)=>{
 }
 
 
+//Other functions
+const getPostdata=async(post_id)=>{
+  var res = await db.promise().query('SELECT post_title,thumbURL FROM subscribe.posts where post_id = ?',[post_id]);
+  //console.log(res[0])
+  //delete(res[0][0]['post_id'])
+  //res = JSON.parse(res[0][0])
+  //console.log(JSON.parse(res[0][0]));
+  return(res[0][0])
+}
+
+//getPostdata(3);
 
 
 
@@ -189,6 +200,7 @@ app.post('/upload-post', isAuthenticated, async (req, res) => {
     //console.log('yes')
     const cont = req.body;
     const user_id = req.session.passport.user.id;
+    /*
     // Check if the user_id exists in the database
     const [rows, fields] = await db.promise().query('SELECT * FROM subscribe.posts WHERE user_id = ?', [user_id]);
     
@@ -204,6 +216,54 @@ app.post('/upload-post', isAuthenticated, async (req, res) => {
       await db.promise().query('UPDATE subscribe.posts SET post_text = ? WHERE user_id = ?', [JSON.stringify(existingPosts), user_id]);
     }
 
+*/
+
+
+
+
+// Execute the SQL query to insert a new post
+db.query(`INSERT INTO subscribe.posts (post_cont, post_title, thumbURL) VALUES (?, ?, ?)`, [cont.content, cont.title, cont.thumb], (error, results, fields) => {
+  if (error) {
+    console.error('Error inserting new post: ', error);
+    return;
+  }
+  console.log('New post created successfully.');
+
+  // Get the generated post_id
+  const postId = results.insertId;
+  console.log(postId);
+
+  // Check if the user exists in the user_posts table
+  db.query('SELECT * FROM subscribe.user_posts WHERE id = ?', [user_id], (error, results, fields) => {
+    if (error) {
+      console.error('Error checking if user exists: ', error);
+      return;
+    }
+
+    // If user doesn't exist, insert a new row
+    if (results.length === 0) {
+      db.query('INSERT INTO subscribe.user_posts (id, posts) VALUES (?, ?)', [user_id, JSON.stringify([postId])], (error, results, fields) => {
+        if (error) {
+          console.error('Error inserting new row: ', error);
+          return;
+        }
+        console.log('New row inserted into user_posts.');
+      });
+    } else {
+      // If user exists, update the row by appending the new post_id
+      const currentPosts = JSON.parse(results[0].posts);
+      currentPosts.push(postId);
+      db.query('UPDATE subscribe.user_posts SET posts = ? WHERE id = ?', [JSON.stringify(currentPosts), user_id], (error, results, fields) => {
+        if (error) {
+          console.error('Error updating row: ', error);
+          return;
+        }
+        console.log('Row updated in user_posts.');
+      });
+    }
+  });
+});
+
 
     res.status(200).json({ 'message': 'Post uploaded successfully' });
   } catch (err) {
@@ -211,6 +271,21 @@ app.post('/upload-post', isAuthenticated, async (req, res) => {
     res.status(500).json({ 'message': 'Server Error' });
   }
 });
+
+app.get('/user-posts',isAuthenticated,async (req,res)=>{
+    const user = req.session.passport.user.id;
+
+    var posts =await db.promise().query('SELECT * FROM subscribe.user_posts where id = ?',[user])
+    posts = JSON.parse(posts[0][0].posts);
+
+    var posts_res = [];
+    for(var i of posts){
+      var dat= await getPostdata(i);
+      posts_res.push(dat);
+    }
+  res.send(posts_res);
+
+})
 
 
 passport.use(new Strategy(async function verify(username,password,cb){

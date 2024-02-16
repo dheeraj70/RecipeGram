@@ -6,6 +6,7 @@ export default function Post(props) {
   //const [imgs,setImgs] = useState([]);
   const navigate = useNavigate();
   const inputRef = useRef(null);
+  const titleRef = useRef(null);
   
 
     useEffect(() => {
@@ -14,8 +15,7 @@ export default function Post(props) {
     }, [inputRef]);
 
     const SubmitPost =async ()=>{
-      var content = inputRef.current.innerHTML;
-      console.log(content);
+      
 
 //Submit all the images in container
       const images = inputRef.current.querySelectorAll('img');
@@ -54,8 +54,10 @@ export default function Post(props) {
   }
   console.log(imageUrls);
 
-      content = inputRef.current.innerHTML;
-      console.log(content);
+      var content = inputRef.current.innerHTML;
+      var title = titleRef.current.value;
+      var thumbImg = imageUrls[0];
+ 
 
       const contentPostResponse = await fetch('http://localhost:8080/upload-post',{
         method: 'POST',
@@ -63,7 +65,7 @@ export default function Post(props) {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({'content' :content})
+        body: JSON.stringify({'title':title, 'thumb':thumbImg,'content' :content})
       }).then((res)=>{
         alert("You have successfully Posted");
         props.moveToFeed();
@@ -249,6 +251,7 @@ const newNoden = document.createElement("div");
   return (
     <>
     <div className="post">
+    <input ref={titleRef} className='title' type="text" name="title" id="title" placeholder='Title of the Recipe'/>
     <div className="opts">
       
       <div className="dropdown">

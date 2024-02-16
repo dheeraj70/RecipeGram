@@ -88,3 +88,16 @@
     margin-top: 30px;
     text-align: center;
 }
+.title{
+    border-radius: 11px;
+    border: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 30px;
+}
+.title:focus{
+    outline: none;
+}
+.title:placeholder-shown {
+    font-style: italic;
+ }
