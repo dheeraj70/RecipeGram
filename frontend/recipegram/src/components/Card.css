@@ -1,0 +1,44 @@
+.cardR{
+    height: 330px;
+    width: 280px;
+    /*background-image: linear-gradient(white 60%,rgba(0, 0, 0, 0.607) );*/
+    border-radius: 10px;
+    position: relative;
+    
+    background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.cardR:before{
+    content: '';
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%,rgba(0, 0, 0, 0.744) );
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.cardR:hover > .cardText{
+    font-size: 25px;
+    /*text-shadow: 1px 1px 3px rgb(255, 255, 255);*/
+}
+.cardR:hover::before{
+    opacity: 1;
+}
+.cardR > * {
+    position: relative;
+}
+.cardText{
+    color: white;
+    position: absolute;
+    bottom: 10px;
+    font-size: 23px;
+    transition: ease 0.2s;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+

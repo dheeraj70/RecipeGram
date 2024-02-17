@@ -92,8 +92,16 @@ const isAuthenticated = (req,res,next)=>{
 
 
 //Other functions
+const getPostMetadata=async(post_id)=>{
+  var res = await db.promise().query('SELECT post_id,post_title,thumbURL FROM subscribe.posts where post_id = ?',[post_id]);
+  //console.log(res[0])
+  //delete(res[0][0]['post_id'])
+  //res = JSON.parse(res[0][0])
+  //console.log(JSON.parse(res[0][0]));
+  return(res[0][0])
+}
 const getPostdata=async(post_id)=>{
-  var res = await db.promise().query('SELECT post_title,thumbURL FROM subscribe.posts where post_id = ?',[post_id]);
+  var res = await db.promise().query('SELECT post_title,post_cont FROM subscribe.posts where post_id = ?',[post_id]);
   //console.log(res[0])
   //delete(res[0][0]['post_id'])
   //res = JSON.parse(res[0][0])
@@ -280,12 +288,17 @@ app.get('/user-posts',isAuthenticated,async (req,res)=>{
 
     var posts_res = [];
     for(var i of posts){
-      var dat= await getPostdata(i);
+      var dat= await getPostMetadata(i);
       posts_res.push(dat);
     }
   res.send(posts_res);
 
 })
+
+app.get('/posts/:pId',isAuthenticated, async(req,res)=>{
+  var pdat = await getPostdata(req.params.pId);
+  res.send(pdat);
+});
 
 
 passport.use(new Strategy(async function verify(username,password,cb){

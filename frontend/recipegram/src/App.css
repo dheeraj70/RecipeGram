@@ -85,25 +85,23 @@ background-color: rgb(226, 226, 226);
   display: flex;
   align-items: center;
 }
-.drop{
-  height: 150px;
-  width: 120px;
-  background-color: rgb(79, 79, 79);
-  position: absolute;
-  top: 32px;
-  left: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 
-}
 .posr{
   position: relative;
 }
-.dropbtn{
- 
-  background-color: rgb(199, 199, 199);
-  border: none;
-  padding-top: 12.5px;
-  padding-bottom: 12.5px;
+.cp{
+  cursor: pointer;
+}
+.post-output{
+  background-color: white;
+  height: max-content;
+  border-radius: 15px;
+  padding: 20px;
+  max-width: 100%;
+}
+.postTitle{
+  background-color: white;
+  border-radius: 12px;
+  height: 45px;
+  text-align: center;
 }

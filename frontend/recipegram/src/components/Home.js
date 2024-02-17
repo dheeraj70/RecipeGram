@@ -1,12 +1,12 @@
 import React, { useState , useRef, useEffect} from 'react';
-import { useLocation , useNavigate} from 'react-router-dom';
-import MyPosts from './MyPosts';
+import { useLocation , useNavigate, Outlet} from 'react-router-dom';
+/*import MyPosts from './MyPosts';
 import Post from './Post';
 import Profile from './Profile';
 import Feed from './Feed';
 import MySubscriptions from './MySubscriptions';
 
-
+*/
 export default function Home() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ export default function Home() {
  
 
   const [profileClicked, setProfileClicked] = useState(false);
-  const [activeTab, setActiveTab] = useState("feed");
+
   const [responseData, setResponseData] = useState(null);
   const [user, setUser] = useState(false);
   //const [user,setUser] = useState((location.state)?(location.state.user):false);
@@ -93,22 +93,7 @@ export default function Home() {
       console.error('Error during GET request:', error);
     }
   };
-  const renderComponent = () => {
-    switch (activeTab) {
-      case 'feed':
-        return <Feed />;
-      case 'mySubscriptions':
-        return <MySubscriptions />;
-      case 'myPosts':
-        return <MyPosts/>;
-      case 'post':
-        return <Post moveToFeed={()=>{setActiveTab('feed')}}/>;
-      case 'profile':
-        return <Profile />;
-      default:
-        return null; // Handle default case or unexpected tab value
-    }
-  };
+
 
 
   return ( user&&(
@@ -125,25 +110,29 @@ export default function Home() {
       )}
       */}
       <div className="nav">
-        <img className='nav_logo' src="RecipeGram-logos_transparent.png" alt="logo" />
+        <img className='nav_logo' src="/RecipeGram-logos_transparent.png" alt="logo" />
         <div className="nav_elements">
-          <button onClick={()=>{setActiveTab("feed")}} className='navbtn'>Feed</button>
-          <button onClick={()=>{setActiveTab("mySubscriptions")}} className='navbtn'>My Subscriptions</button>
-          <button onClick={()=>{setActiveTab("myPosts")}} className='navbtn'>My Posts</button>
-          <button onClick={()=>{setActiveTab("post")}} className='navbtn'>Post</button>
-          <div className='profile_div posr'><button ref={profileTab} onClick={()=>{if(profileClicked ===false){setProfileClicked(true)}}} className='navbtn txtac'> <img className='profile_pic' src="pro.jpg" alt="profile" />Profile</button>
-          {(profileClicked)&&
-          <div ref={profileDrop} className="drop">
-          <button ref={profileEdit} className='dropbtn'>Edit Profile</button>
-          <button ref={profileSetting} className='dropbtn'>Settings</button>
-          <button ref={profileLogOut} className='dropbtn' onClick={handleLogOut}>Log Out</button>
-          </div>
-          }
+          {/*<button onClick={()=>{navigate("feed")}} className='navbtn'>Feed</button>*/}
+          <button onClick={()=>{navigate("subs")}} className='btn btn-secondary'>My Subscriptions</button>
+          <button onClick={()=>{navigate("myposts")}} className='btn btn-secondary'>My Posts</button>
+          <button onClick={()=>{navigate("newpost")}} className='btn btn-secondary'>Post</button>
+          <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <img className='profile_pic' src="/pro.jpg" alt="profile" />Dropdown button
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item cp" >Edit Profile</a></li>
+    <li><a class="dropdown-item cp" >Settings</a></li>
+    <li><a class="dropdown-item cp" onClick={handleLogOut}>Log Out</a></li>
+  </ul>
 </div>
+          
           
         </div>
       </div>
-      {renderComponent()}
+{/*This outlet helps to render sub route/ nested route */}
+      <Outlet />
+
       <h1>Welcome {user.username}</h1>
       <button onClick={handleGetRequest}>Make GET Request</button>
 

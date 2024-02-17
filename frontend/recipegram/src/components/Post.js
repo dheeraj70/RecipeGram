@@ -2,7 +2,7 @@ import React,{useEffect, useRef, useState} from 'react';
 import { useNavigate} from 'react-router-dom';
 import './Post.css';
 
-export default function Post(props) {
+export default function Post() {
   //const [imgs,setImgs] = useState([]);
   const navigate = useNavigate();
   const inputRef = useRef(null);
@@ -68,7 +68,7 @@ export default function Post(props) {
         body: JSON.stringify({'title':title, 'thumb':thumbImg,'content' :content})
       }).then((res)=>{
         alert("You have successfully Posted");
-        props.moveToFeed();
+        navigate('/home')
 
     }).
       catch((err)=>{
