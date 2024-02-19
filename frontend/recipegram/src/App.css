@@ -67,19 +67,22 @@ background-color: rgb(226, 226, 226);
   justify-content: space-around;
   gap: 10px;
   align-items: center;
+  
 }
 .navbtn{
-  background-color: rgb(255, 255, 255);
-  border-radius: 20px 20px 20px 20px;
-  height: fit-content;
-  border: none;
-  font-size: 20px;
+ 
+  white-space: nowrap;
 
 }
 .profile_pic{
  
   height: 2vw;
   border-radius: 100%;
+}
+.profileBtn{
+  padding: 3px;
+  padding-left: 11px;
+  padding-right: 11px;
 }
 .txtac{
   display: flex;
@@ -104,4 +107,101 @@ background-color: rgb(226, 226, 226);
   border-radius: 12px;
   height: 45px;
   text-align: center;
+}
+.ltbbr{
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.profileDetails{
+  background-color: rgb(226, 226, 226);
+  height: 400px;
+  display: flex;
+  align-items: center;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  border-radius: 10px;
+  
+}
+.proFilepic{
+
+  width: 100%;
+  padding-right: 35px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.proDetails{
+  display: flex;
+  flex-direction: column;
+ 
+  width: 100%;
+  padding: 25px;
+  gap: 15px;
+}
+.proName{
+  display: inline;
+}
+.propicc{
+  float: right;
+  border-radius: 50%;
+  
+}
+.proSocial{
+  display: flex;
+  font-size: 40px;
+  gap: 35px;
+}
+.profileDesc{
+  display: flex;
+  gap: 50px;
+  
+}
+.proDescOne{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.proDescHead{
+  margin: 0px;
+}
+
+
+.propic-update{
+  display:flex ;
+  justify-content: center;
+  gap: 70px;
+}
+.editPropic{
+  border-radius: 100%;
+}
+.editText{
+ display: flex;
+ margin-right: 25%;
+ justify-content: right;
+}
+.editLabel{
+  white-space: nowrap;
+  font-size: 17px;
+  width: fit-content;
+}
+.chefDetail{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 70px;
+  padding-left: 30px;
+ padding-top: 10px;
+ padding-bottom: 10px;
+}
+.detailImg{
+height: 70px
+}
+.detailImgLiteral{
+  height: inherit;
+  border-radius: 100%;
+}
+.chefDetail:hover{
+  background-color: rgb(226, 226, 226);;
+}
+.m0{
+  margin: 0;
 }

@@ -1,14 +1,16 @@
 import React,{useEffect, useState} from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Card from './Card';
 
-export default function MyPosts() {
+export default function ChefProfile() {
   const navigate = useNavigate();
+  const params = useParams();
+  const chefID = params.userid;
   const [allPosts, setAllPosts]=useState([]);
   const [userDesc, setUserDesc]=useState("");
   useEffect(()=>{
     const fetchUserDesc = async()=>{
-      const res = await fetch('http://localhost:8080/userdesc',{
+      const res = await fetch(`http://localhost:8080/chefs/${chefID}`,{
       credentials: 'include',
     })
     var data = await res.json();
@@ -16,7 +18,7 @@ export default function MyPosts() {
     }
     fetchUserDesc();
     const fetchPosts = async()=>{
-    const res = await fetch('http://localhost:8080/user-posts',{
+    const res = await fetch(`http://localhost:8080/chef-posts/${chefID}`,{
       
       credentials: 'include',
 

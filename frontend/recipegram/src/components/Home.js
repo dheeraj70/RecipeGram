@@ -110,18 +110,26 @@ export default function Home() {
       )}
       */}
       <div className="nav">
-        <img className='nav_logo' src="/RecipeGram-logos_transparent.png" alt="logo" />
+        <img onClick={()=>{navigate("/home")}} className='nav_logo cp' src="/RecipeGram-logos_transparent.png" alt="logo" />
         <div className="nav_elements">
           {/*<button onClick={()=>{navigate("feed")}} className='navbtn'>Feed</button>*/}
-          <button onClick={()=>{navigate("subs")}} className='btn btn-secondary'>My Subscriptions</button>
-          <button onClick={()=>{navigate("myposts")}} className='btn btn-secondary'>My Posts</button>
-          <button onClick={()=>{navigate("newpost")}} className='btn btn-secondary'>Post</button>
+          {/*<button className='btn btn-secondary'>My Subscriptions</button>*/}
+          <div class="input-group">
+  <input type="text" class="form-control" placeholder="Search" aria-label="Search for Recipes or Chefs" aria-describedby="basic-addon2"/>
+  <div class="input-group-append">
+    <button class="btn btn-secondary ltbbr" type="button"><i class="fas fa-search"></i></button>
+  </div>
+</div>
+          <button onClick={()=>{navigate("topchefs")}} className='btn btn-secondary navbtn'>Top Chefs</button>
+          <button onClick={()=>{navigate("newpost")}} className='btn btn-secondary navbtn'>Post</button>
           <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <img className='profile_pic' src="/pro.jpg" alt="profile" />Dropdown button
+  <button class="btn btn-secondary dropdown-toggle profileBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <img className='profile_pic' src="/pro.jpg" alt="profile" />Profile
   </button>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item cp" >Edit Profile</a></li>
+  <li><a class="dropdown-item cp" onClick={()=>{navigate("myposts")}}>My Profile</a></li>
+  <li><a class="dropdown-item cp" onClick={()=>{navigate("subs")}} >My Subscriptions</a></li>
+    <li><a class="dropdown-item cp" onClick={()=>{navigate("editprofile")}} >Edit Profile</a></li>
     <li><a class="dropdown-item cp" >Settings</a></li>
     <li><a class="dropdown-item cp" onClick={handleLogOut}>Log Out</a></li>
   </ul>

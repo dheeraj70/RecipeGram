@@ -12,6 +12,9 @@ import PostC from './components/PostC';
 //import Register from './components/Register';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import EditProfile from './components/EditProfile';
+import TopChefs from './components/TopChefs'
+import ChefProfile from './components/ChefProfile';
 
 function App() {
   //const [sessionChanged, setSessionChanged] = useState(false);
@@ -32,7 +35,10 @@ function App() {
         <Route path="myposts" element={<MyPosts/>}/>
         <Route path="newpost" element={<Post/>}/>
         <Route path="post/:postId" element={<PostC/>}/>
-          
+        <Route path="editprofile" element={<EditProfile/>}/>
+        <Route path="topchefs" element={<TopChefs/>}/>
+        <Route path="chefs/:userid" element={<ChefProfile/>}/>
+
           </Route> 
        
       </Routes>

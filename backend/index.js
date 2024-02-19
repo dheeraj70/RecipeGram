@@ -108,7 +108,36 @@ const getPostdata=async(post_id)=>{
   //console.log(JSON.parse(res[0][0]));
   return(res[0][0])
 }
+const getUserDetails=async(user_id)=>{
+  try {
+    // Step 1: Retrieve username from the users table
+    const [userRows] = await db.promise().query('SELECT username FROM subscribe.users WHERE id = ?', [user_id]);
+    const username = userRows.length > 0 ? userRows[0].username : null;
 
+    // Step 2: Retrieve the number of posts from the user_posts table
+    const [postsRows] = await db.promise().query('SELECT posts FROM subscribe.user_posts WHERE id = ?', [user_id]);
+    const postsCount = postsRows.length > 0 ? JSON.parse(postsRows[0].posts).length : 0;
+
+    // Step 3: Retrieve additional details from the user_details table if user_id is present
+    const [detailsRows] = await db.promise().query('SELECT iglink, ytlink, lilink, twlink FROM subscribe.user_details WHERE id = ?', [user_id]);
+    const { iglink, ytlink, lilink, twlink } = detailsRows.length > 0 ? detailsRows[0] : {};
+
+    // Construct the JSON object with retrieved data
+    const userDetails = {
+        username: username,
+        postsCount: postsCount,
+        iglink: iglink,
+        ytlink: ytlink,
+        lilink: lilink,
+        twlink: twlink
+    };
+
+    return(userDetails);
+} catch (error) {
+    console.error('Error retrieving user details:', error);
+    throw error;
+}
+}
 //getPostdata(3);
 
 
@@ -284,7 +313,7 @@ app.get('/user-posts',isAuthenticated,async (req,res)=>{
     const user = req.session.passport.user.id;
 
     var posts =await db.promise().query('SELECT * FROM subscribe.user_posts where id = ?',[user])
-    posts = JSON.parse(posts[0][0].posts);
+    posts = (posts[0][0] === undefined)?([]):(JSON.parse(posts[0][0].posts));
 
     var posts_res = [];
     for(var i of posts){
@@ -299,7 +328,108 @@ app.get('/posts/:pId',isAuthenticated, async(req,res)=>{
   var pdat = await getPostdata(req.params.pId);
   res.send(pdat);
 });
+app.get('/userdesc', async(req,res)=>{
+  var userData = await getUserDetails(req.session.passport.user.id);
+  res.send(userData);
+});
+app.post('/userdesc',isAuthenticated, (req, res) => {
+  const { user_name, iglink, ytlink, lilink, twlink } = req.body;
 
+  // Step 1: Check if the new username already exists in the users table
+  db.query('SELECT * FROM users WHERE username = ?', [user_name], (err, results) => {
+    if (err) {
+      console.error('Error checking username:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    if (results.length > 0) {
+      // If the new username already exists, return status code 403
+      return res.status(403).send('Username already exists');
+    } else {
+      // If the new username doesn't exist, proceed with updating user details
+      // For demonstration purposes, assuming user_id is passed in the request body
+      const user_id = req.session.passport.user.id;
+
+      // Step 2: Update the username in the users table
+    if(user_name !="" || !(user_name)){  db.query('UPDATE users SET username = ? WHERE id = ?', [user_name, user_id], (err, result) => {
+        if (err) {
+          console.error('Error updating username:', err);
+          return res.status(500).send('Internal Server Error');
+        }
+});}
+        // Step 3: Check if user_id exists in the user_details table
+        db.query('SELECT * FROM user_details WHERE id = ?', [user_id], (err, userDetails) => {
+          if (err) {
+            console.error('Error checking user details:', err);
+            return res.status(500).send('Internal Server Error');
+          }
+        
+          if (userDetails.length === 0) {
+            // If user_id doesn't exist, insert new row in user_details table
+            db.query('INSERT INTO user_details (id, iglink, ytlink, lilink, twlink) VALUES (?, ?, ?, ?, ?)',
+              [user_id, iglink, ytlink, lilink, twlink],
+              (err, result) => {
+                if (err) {
+                  console.error('Error inserting user details:', err);
+                  return res.status(500).send('Internal Server Error');
+                }
+                return res.status(200).send('Profile updated successfully');
+              });
+          } else {
+            // If user_id exists, update existing row in user_details table
+            db.query('UPDATE user_details SET iglink = ?, ytlink = ?, lilink = ?, twlink = ? WHERE id = ?',
+              [iglink, ytlink, lilink, twlink, user_id],
+              (err, result) => {
+                if (err) {
+                  console.error('Error updating user details:', err);
+                  return res.status(500).send('Internal Server Error');
+                }
+                return res.status(200).send('Profile updated successfully');
+              });
+          }
+        });
+      
+    }
+  });
+});
+
+
+
+app.get('/chefs/:chefId', async(req,res)=>{
+  var userData = await getUserDetails(req.params.chefId);
+  res.send(userData);
+});
+app.get('/chef-posts/:chefId',async (req,res)=>{
+  const user = req.params.chefId;
+
+  var posts =await db.promise().query('SELECT * FROM subscribe.user_posts where id = ?',[user])
+  posts = (posts[0][0] === undefined)?([]):(JSON.parse(posts[0][0].posts));
+  console.log(posts);
+  var posts_res = [];
+  for(var i of posts){
+    var dat= await getPostMetadata(i);
+    posts_res.push(dat);
+  }
+res.send(posts_res);
+
+})
+
+
+app.get('/topchefs', (req, res) => {
+  const sql = 'SELECT id, username FROM users';
+
+  // Execute the query
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error executing MySQL query: ' + err.message);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    // Send the results as the response
+    res.json(results);
+  });
+});
 
 passport.use(new Strategy(async function verify(username,password,cb){
     console.log(username)
