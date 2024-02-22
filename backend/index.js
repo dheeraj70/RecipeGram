@@ -334,7 +334,7 @@ app.get('/userdesc', async(req,res)=>{
 });
 app.post('/userdesc',isAuthenticated, (req, res) => {
   const { user_name, iglink, ytlink, lilink, twlink } = req.body;
-
+  const user_id = req.session.passport.user.id;
   // Step 1: Check if the new username already exists in the users table
   db.query('SELECT * FROM users WHERE username = ?', [user_name], (err, results) => {
     if (err) {
@@ -342,13 +342,15 @@ app.post('/userdesc',isAuthenticated, (req, res) => {
       return res.status(500).send('Internal Server Error');
     }
 
-    if (results.length > 0) {
+    if (results.length > 0 && results[0].id !== user_id) {
       // If the new username already exists, return status code 403
+      
       return res.status(403).send('Username already exists');
+    
     } else {
       // If the new username doesn't exist, proceed with updating user details
       // For demonstration purposes, assuming user_id is passed in the request body
-      const user_id = req.session.passport.user.id;
+      
 
       // Step 2: Update the username in the users table
     if(user_name !="" || !(user_name)){  db.query('UPDATE users SET username = ? WHERE id = ?', [user_name, user_id], (err, result) => {
@@ -430,6 +432,28 @@ app.get('/topchefs', (req, res) => {
     res.json(results);
   });
 });
+
+app.get('/subscriptions', (req, res) => {
+  const userId = req.session.passport.user.id;
+
+  const sql = `
+    SELECT subscriptions.subscribed_to_id as id, users.username
+    FROM subscriptions
+    INNER JOIN users ON subscriptions.subscribed_to_id = users.id
+    WHERE subscriptions.subscriber_id = ?
+  `;
+  
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error('Error retrieving subscribers:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+    
+    res.json(results);
+  });
+});
+
 
 passport.use(new Strategy(async function verify(username,password,cb){
     console.log(username)

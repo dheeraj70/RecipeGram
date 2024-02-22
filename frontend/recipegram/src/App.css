@@ -121,26 +121,31 @@ background-color: rgb(226, 226, 226);
   margin-right: 1vw;
   border-radius: 10px;
   
+  
 }
 .proFilepic{
 
-  width: 100%;
-  padding-right: 35px;
+  flex-basis: 0;
+  flex-grow: 1;
   padding-top: 10px;
   padding-bottom: 10px;
 }
 .proDetails{
   display: flex;
   flex-direction: column;
- 
-  width: 100%;
+  flex-grow: 0.5;
+  flex-basis: 0;
+  
   padding: 25px;
+  padding-left: 0px;
+  padding-right: 25%;
   gap: 15px;
 }
 .proName{
   display: inline;
 }
 .propicc{
+  margin-right: 35px;
   float: right;
   border-radius: 50%;
   
