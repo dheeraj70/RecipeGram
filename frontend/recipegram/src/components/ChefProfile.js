@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Card from "./Card";
+import PostThumbs from './PostThumbs';
+import SusbcribeBtn from "./SusbcribeBtn";
 
 export default function ChefProfile() {
   const navigate = useNavigate();
@@ -46,6 +47,8 @@ export default function ChefProfile() {
                 </h2>
                 <p>Rating</p>
               </div>
+              <div className="proDescOne"><h2 className='proDescHead'>{userDesc.subCount}</h2><p>Subscribers</p></div>
+
             </div>
             <div className="proSocial">
               <a href={userDesc.iglink}>
@@ -61,34 +64,15 @@ export default function ChefProfile() {
                 <i class="fa-brands fa-square-twitter"></i>
               </a>
             </div>
-            <div className="text-center"><button className="btn btn-secondary w-50">Subscribe</button>
-</div>
+            <div className="text-center">
+              <SusbcribeBtn userId={chefID}/>
+            </div>
             
           </div>
         </div>
       </div>
 
-      <div className="container mt-4">
-        <hr className="mt-1 mb-1" />
-        <h2 className="text-center pt-3 pb-3 m-0">Your Posts</h2>
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
-          {allPosts.map((i) => {
-            return (
-              <div
-                onClick={() => {
-                  navigate(`/home/post/${i.post_id}`);
-                }}
-                className="col d-flex justify-content-center"
-              >
-                <Card
-                  title={i.post_title}
-                  backImg={i.thumbURL === null ? "/noimg.svg" : i.thumbURL}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <PostThumbs allPosts={allPosts} listTitle={"Posts made"}/>
     </>
   );
 }

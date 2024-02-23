@@ -7,7 +7,7 @@ import Feed from './Feed';
 import MySubscriptions from './MySubscriptions';
 
 */
-export default function Home() {
+export default function Home({setSearchResults}) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -19,6 +19,9 @@ export default function Home() {
  
 
   const [profileClicked, setProfileClicked] = useState(false);
+
+  const [query, setQuery] = useState('');
+ 
 
   const [responseData, setResponseData] = useState(null);
   const [user, setUser] = useState(false);
@@ -94,30 +97,32 @@ export default function Home() {
     }
   };
 
-
+const handleSearch = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/search?query=${query}`);
+      const data = await response.json();
+      console.log(data);
+      setSearchResults(data); // Update search results state with the response from the backend
+      navigate("search")
+    } catch (error) {
+      console.error('Error searching posts:', error);
+    }
+  };
 
   return ( user&&(
     <>
-    {/*
-      <h1>Welcome {location.state.user}</h1>
-      <button onClick={handleGetRequest}>Make GET Request</button>
-
-      {responseData && (
-        <div>
-          <h2>Response from GET Request:</h2>
-          <pre>{JSON.stringify(responseData, null, 2)}</pre>
-        </div>
-      )}
-      */}
+    
       <div className="nav">
         <img onClick={()=>{navigate("/home")}} className='nav_logo cp' src="/RecipeGram-logos_transparent.png" alt="logo" />
         <div className="nav_elements">
           {/*<button onClick={()=>{navigate("feed")}} className='navbtn'>Feed</button>*/}
           {/*<button className='btn btn-secondary'>My Subscriptions</button>*/}
           <div class="input-group">
-  <input type="text" class="form-control" placeholder="Search" aria-label="Search for Recipes or Chefs" aria-describedby="basic-addon2"/>
+  <input type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)} class="form-control" placeholder="Search Recipes" aria-label="Search Recipes" aria-describedby="basic-addon2"/>
   <div class="input-group-append">
-    <button class="btn btn-secondary ltbbr" type="button"><i class="fas fa-search"></i></button>
+    <button onClick={handleSearch} class="btn btn-secondary ltbbr" type="button"><i class="fas fa-search"></i></button>
   </div>
 </div>
           <button onClick={()=>{navigate("topchefs")}} className='btn btn-secondary navbtn'>Top Chefs</button>

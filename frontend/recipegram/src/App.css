@@ -105,8 +105,12 @@ background-color: rgb(226, 226, 226);
 .postTitle{
   background-color: white;
   border-radius: 12px;
-  height: 45px;
+  
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  padding-top: 7px;
+  padding-bottom: 7px;
 }
 .ltbbr{
   border-top-left-radius: 0px;
@@ -157,7 +161,7 @@ background-color: rgb(226, 226, 226);
 }
 .profileDesc{
   display: flex;
-  gap: 50px;
+  gap: 10%;
   
 }
 .proDescOne{

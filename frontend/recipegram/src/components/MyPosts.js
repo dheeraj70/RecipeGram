@@ -1,9 +1,9 @@
 import React,{useEffect, useState} from 'react'
-import { useNavigate } from 'react-router-dom';
-import Card from './Card';
+
+import PostThumbs from './PostThumbs';
 
 export default function MyPosts() {
-  const navigate = useNavigate();
+  
   const [allPosts, setAllPosts]=useState([]);
   const [userDesc, setUserDesc]=useState("");
   useEffect(()=>{
@@ -36,6 +36,8 @@ fetchPosts();
         <div className="profileDesc">
           <div className="proDescOne"><h2 className='proDescHead'>{userDesc.postsCount}</h2><p>Recipes made</p></div>
           <div className="proDescOne"><h2 className='proDescHead'><i class="fa-solid fa-star"></i>5</h2><p>Rating</p></div>
+          <div className="proDescOne"><h2 className='proDescHead'>{userDesc.subCount}</h2><p>Subscribers</p></div>
+
         </div>
         <div className="proSocial"><a href={userDesc.iglink}><i class="fa-brands fa-square-instagram"></i></a><a href={userDesc.ytlink}><i class="fa-brands fa-square-youtube"></i></a><a href={userDesc.lilink}><i class="fa-brands fa-linkedin"></i></a><a href={userDesc.twlink}><i class="fa-brands fa-square-twitter"></i></a></div>
 
@@ -43,16 +45,7 @@ fetchPosts();
       </div>
     </div>
     
-    <div className="container mt-4">
-    <hr className='mt-1 mb-1'/>
-    <h2 className='text-center pt-3 pb-3 m-0'>Your Posts</h2>
-      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
-      {allPosts.map((i)=>{
-      return(<div onClick={()=>{navigate(`/home/post/${i.post_id}`)}} className="col d-flex justify-content-center"><Card title={i.post_title} backImg={(i.thumbURL=== null)?('/noimg.svg'):(i.thumbURL)}/></div>)
-    })}
-       
-      </div>
-    </div>
+    <PostThumbs allPosts={allPosts} listTitle={"Your Posts"}/>
     
   </>
   )

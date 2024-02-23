@@ -52,7 +52,10 @@ export default function EditProfile() {
 
       if (response.ok) {
         alert('Profile updated successfully');
-      } else {
+      }else if(response.status === 403){
+        alert('Username already exists!');
+      } 
+      else {
         throw new Error('Failed to update profile');
       }
     } catch (error) {

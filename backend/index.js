@@ -110,21 +110,25 @@ const getPostdata=async(post_id)=>{
 }
 const getUserDetails=async(user_id)=>{
   try {
-    // Step 1: Retrieve username from the users table
+    
     const [userRows] = await db.promise().query('SELECT username FROM subscribe.users WHERE id = ?', [user_id]);
     const username = userRows.length > 0 ? userRows[0].username : null;
 
-    // Step 2: Retrieve the number of posts from the user_posts table
+    
     const [postsRows] = await db.promise().query('SELECT posts FROM subscribe.user_posts WHERE id = ?', [user_id]);
-    const postsCount = postsRows.length > 0 ? JSON.parse(postsRows[0].posts).length : 0;
+    const postsCount = postsRows.length > 0 ? postsRows[0].posts.length : 0;
 
-    // Step 3: Retrieve additional details from the user_details table if user_id is present
+    
     const [detailsRows] = await db.promise().query('SELECT iglink, ytlink, lilink, twlink FROM subscribe.user_details WHERE id = ?', [user_id]);
     const { iglink, ytlink, lilink, twlink } = detailsRows.length > 0 ? detailsRows[0] : {};
 
+    const [subCountRows] = await db.promise().query('SELECT COUNT(subscriber_id) AS subcount FROM subscriptions WHERE subscribed_to_id = ?;', [user_id]);
+    const subCount = JSON.parse(subCountRows[0].subcount);
     // Construct the JSON object with retrieved data
+
     const userDetails = {
         username: username,
+        subCount: subCount,
         postsCount: postsCount,
         iglink: iglink,
         ytlink: ytlink,
@@ -279,7 +283,7 @@ db.query(`INSERT INTO subscribe.posts (post_cont, post_title, thumbURL) VALUES (
 
     // If user doesn't exist, insert a new row
     if (results.length === 0) {
-      db.query('INSERT INTO subscribe.user_posts (id, posts) VALUES (?, ?)', [user_id, JSON.stringify([postId])], (error, results, fields) => {
+      db.query('INSERT INTO subscribe.user_posts (id, posts) VALUES (?, ?)', [user_id, [postId]], (error, results, fields) => {
         if (error) {
           console.error('Error inserting new row: ', error);
           return;
@@ -288,9 +292,9 @@ db.query(`INSERT INTO subscribe.posts (post_cont, post_title, thumbURL) VALUES (
       });
     } else {
       // If user exists, update the row by appending the new post_id
-      const currentPosts = JSON.parse(results[0].posts);
-      currentPosts.push(postId);
-      db.query('UPDATE subscribe.user_posts SET posts = ? WHERE id = ?', [JSON.stringify(currentPosts), user_id], (error, results, fields) => {
+      /*const currentPosts = JSON.parse(results[0].posts);
+      currentPosts.push(postId);*/
+      db.query("UPDATE subscribe.user_posts SET posts = JSON_ARRAY_APPEND(posts, '$', ?) WHERE id = ?", [postId, user_id], (error, results, fields) => {
         if (error) {
           console.error('Error updating row: ', error);
           return;
@@ -312,9 +316,10 @@ db.query(`INSERT INTO subscribe.posts (post_cont, post_title, thumbURL) VALUES (
 app.get('/user-posts',isAuthenticated,async (req,res)=>{
     const user = req.session.passport.user.id;
 
-    var posts =await db.promise().query('SELECT * FROM subscribe.user_posts where id = ?',[user])
-    posts = (posts[0][0] === undefined)?([]):(JSON.parse(posts[0][0].posts));
+    var posts =await db.promise().query('SELECT posts FROM subscribe.user_posts where id = ?',[user])
 
+    posts = (posts[0][0] === undefined)?([]):(posts[0][0].posts);
+  
     var posts_res = [];
     for(var i of posts){
       var dat= await getPostMetadata(i);
@@ -395,6 +400,45 @@ app.post('/userdesc',isAuthenticated, (req, res) => {
   });
 });
 
+// Backend endpoint to find user ID by post ID
+app.get('/user-by-post/:postId', (req, res) => {
+  const { postId } = req.params;
+
+  // Query the database to find the user ID associated with the given post ID
+  const sql = "SELECT id FROM user_posts WHERE JSON_CONTAINS(posts, CAST(? AS JSON))";
+  db.query(sql, [postId], (err, results) => {
+    if (err) {
+      console.error('Error finding user ID by post ID:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).json({ error: 'User not found for the given post ID' });
+      return;
+    }
+
+    const userId = results[0].id;
+
+    // Query the database to fetch the username based on the retrieved user ID
+    const userSql = "SELECT username FROM users WHERE id = ?";
+    db.query(userSql, [userId], (userErr, userResults) => {
+      if (userErr) {
+        console.error('Error finding username by user ID:', userErr);
+        res.status(500).json({ error: 'Internal Server Error' });
+        return;
+      }
+
+      if (userResults.length === 0) {
+        res.status(404).json({ error: 'Username not found for the given user ID' });
+        return;
+      }
+
+      const username = userResults[0].username;
+      res.json({ userId, username });
+    });
+  });
+});
 
 
 app.get('/chefs/:chefId', async(req,res)=>{
@@ -404,9 +448,9 @@ app.get('/chefs/:chefId', async(req,res)=>{
 app.get('/chef-posts/:chefId',async (req,res)=>{
   const user = req.params.chefId;
 
-  var posts =await db.promise().query('SELECT * FROM subscribe.user_posts where id = ?',[user])
-  posts = (posts[0][0] === undefined)?([]):(JSON.parse(posts[0][0].posts));
-  console.log(posts);
+  var posts =await db.promise().query('SELECT posts FROM subscribe.user_posts where id = ?',[user])
+  posts = (posts[0][0] === undefined)?([]):(posts[0][0].posts);
+  //console.log(posts);
   var posts_res = [];
   for(var i of posts){
     var dat= await getPostMetadata(i);
@@ -451,6 +495,77 @@ app.get('/subscriptions', (req, res) => {
     }
     
     res.json(results);
+  });
+});
+
+app.get('/subscriptionStatus/:userId', (req, res) => {
+  const currentUser = req.session.passport.user.id;
+  const subscribedTo = req.params.userId;
+
+if(currentUser == subscribedTo){
+  res.json({isSubscribed: "same" });
+}else{
+
+//console.log(currentUser == subscribedTo);
+
+
+  const sql = 'SELECT * FROM subscriptions WHERE subscriber_id = ? AND subscribed_to_id = ?';
+  db.query(sql, [currentUser, subscribedTo], (err, results) => {
+    if (err) {
+      console.error('Error checking subscription status:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+    const isSubscribed = results.length > 0;
+    //console.log( isSubscribed );
+    res.json({ isSubscribed });
+  });
+}
+});
+
+app.post('/subscriptions/:userId/:action', (req, res) => {
+  const currentUser = req.session.passport.user.id;
+  const subscribedTo = req.params.userId;
+  const action = req.params.action; // 'subscribe' or 'unsubscribe'
+
+  // Perform subscription/unsubscription based on the action
+  let sql, message;
+  if (action === 'subscribe') {
+    sql = 'INSERT INTO subscriptions (subscriber_id, subscribed_to_id) VALUES (?, ?)';
+    message = 'Subscription successful';
+  } else if (action === 'unsubscribe') {
+    sql = 'DELETE FROM subscriptions WHERE subscriber_id = ? AND subscribed_to_id = ?';
+    message = 'Unsubscription successful';
+  } else {
+    res.status(400).json({ error: 'Invalid action' });
+    return;
+  }
+
+  db.query(sql, [currentUser, subscribedTo], (err) => {
+    if (err) {
+      console.error('Error updating subscription:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+    res.json({ message, isSubscribed: action === 'subscribe' });
+  });
+});
+
+
+// Backend endpoint for searching posts by title
+app.get('/search', (req, res) => {
+  const { query } = req.query; // Get the search query from the request
+
+  // Perform a database query to search for posts by title
+  const sql = 'SELECT * FROM posts WHERE post_title LIKE ?';
+  const searchTerm = `%${query}%`; // Add '%' wildcard to search for partial matches
+  db.query(sql, [searchTerm], (err, results) => {
+    if (err) {
+      console.error('Error searching posts:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+    res.json(results); // Send the search results back to the client
   });
 });
 

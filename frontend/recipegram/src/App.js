@@ -15,10 +15,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import EditProfile from './components/EditProfile';
 import TopChefs from './components/TopChefs'
 import ChefProfile from './components/ChefProfile';
+import PostThumbs from './components/PostThumbs';
 
 function App() {
   //const [sessionChanged, setSessionChanged] = useState(false);
-
+  const [searchResults, setSearchResults] = useState([]);
 
 
    //window.addEventListener('sessionchange', ());
@@ -29,7 +30,7 @@ function App() {
     <BrowserRouter >
       <Routes>
         <Route path="/" element={<Login/>}/> 
-        <Route path="/home" element={<Home/>}>
+        <Route path="/home" element={<Home setSearchResults ={setSearchResults}/>}>
         <Route index element={<Feed/>}/>
         <Route path="subs" element={<MySubscriptions/>}/>
         <Route path="myposts" element={<MyPosts/>}/>
@@ -38,7 +39,7 @@ function App() {
         <Route path="editprofile" element={<EditProfile/>}/>
         <Route path="topchefs" element={<TopChefs/>}/>
         <Route path="chefs/:userid" element={<ChefProfile/>}/>
-
+        <Route path="search" element={<PostThumbs allPosts={searchResults} listTitle={"Search Results"}/>}/>
           </Route> 
        
       </Routes>
