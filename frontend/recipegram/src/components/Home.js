@@ -99,7 +99,9 @@ export default function Home({setSearchResults}) {
 
 const handleSearch = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/search?query=${query}`);
+      const response = await fetch(`http://localhost:8080/search?query=${query}`,{
+        credentials:'include'
+      });
       const data = await response.json();
       console.log(data);
       setSearchResults(data); // Update search results state with the response from the backend
@@ -146,6 +148,11 @@ const handleSearch = async () => {
 {/*This outlet helps to render sub route/ nested route */}
       <Outlet />
 
+
+
+{/*Get Request btn for testing
+
+
       <h1>Welcome {user.username}</h1>
       <button onClick={handleGetRequest}>Make GET Request</button>
 
@@ -155,7 +162,7 @@ const handleSearch = async () => {
           <pre>{JSON.stringify(responseData, null, 2)}</pre>
         </div>
       )}
-      
+      */}
     </>)
   );
 }

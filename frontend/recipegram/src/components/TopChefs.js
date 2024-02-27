@@ -9,7 +9,9 @@ export default function TopChefs() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/topchefs'); // Assuming your React app is served from the same origin as your Node.js server
+        const response = await fetch('http://localhost:8080/topchefs',{
+          credentials: 'include'
+        }); // Assuming your React app is served from the same origin as your Node.js server
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }

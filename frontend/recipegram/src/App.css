@@ -214,3 +214,12 @@ height: 70px
 .m0{
   margin: 0;
 }
+.feed_img{
+  height: 350px;
+  object-fit: cover;
+}
+.feed_post_cont{
+  margin-left: 30%;
+  margin-right: 30%;
+  width: 40%;
+}

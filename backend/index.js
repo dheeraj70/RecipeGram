@@ -101,7 +101,7 @@ const getPostMetadata=async(post_id)=>{
   return(res[0][0])
 }
 const getPostdata=async(post_id)=>{
-  var res = await db.promise().query('SELECT post_title,post_cont FROM subscribe.posts where post_id = ?',[post_id]);
+  var res = await db.promise().query('SELECT post_title,post_cont,date_time FROM subscribe.posts where post_id = ?',[post_id]);
   //console.log(res[0])
   //delete(res[0][0]['post_id'])
   //res = JSON.parse(res[0][0])
@@ -263,7 +263,7 @@ app.post('/upload-post', isAuthenticated, async (req, res) => {
 
 
 // Execute the SQL query to insert a new post
-db.query(`INSERT INTO subscribe.posts (post_cont, post_title, thumbURL) VALUES (?, ?, ?)`, [cont.content, cont.title, cont.thumb], (error, results, fields) => {
+db.query(`INSERT INTO subscribe.posts (post_cont, post_title, thumbURL, date_time) VALUES (?, ?, ?, NOW())`, [cont.content, cont.title, cont.thumb], (error, results, fields) => {
   if (error) {
     console.error('Error inserting new post: ', error);
     return;
@@ -333,7 +333,7 @@ app.get('/posts/:pId',isAuthenticated, async(req,res)=>{
   var pdat = await getPostdata(req.params.pId);
   res.send(pdat);
 });
-app.get('/userdesc', async(req,res)=>{
+app.get('/userdesc',isAuthenticated, async(req,res)=>{
   var userData = await getUserDetails(req.session.passport.user.id);
   res.send(userData);
 });
@@ -401,7 +401,7 @@ app.post('/userdesc',isAuthenticated, (req, res) => {
 });
 
 // Backend endpoint to find user ID by post ID
-app.get('/user-by-post/:postId', (req, res) => {
+app.get('/user-by-post/:postId',isAuthenticated, (req, res) => {
   const { postId } = req.params;
 
   // Query the database to find the user ID associated with the given post ID
@@ -441,7 +441,7 @@ app.get('/user-by-post/:postId', (req, res) => {
 });
 
 
-app.get('/chefs/:chefId', async(req,res)=>{
+app.get('/chefs/:chefId',isAuthenticated, async(req,res)=>{
   var userData = await getUserDetails(req.params.chefId);
   res.send(userData);
 });
@@ -461,7 +461,7 @@ res.send(posts_res);
 })
 
 
-app.get('/topchefs', (req, res) => {
+app.get('/topchefs',isAuthenticated, (req, res) => {
   const sql = 'SELECT id, username FROM users';
 
   // Execute the query
@@ -477,7 +477,7 @@ app.get('/topchefs', (req, res) => {
   });
 });
 
-app.get('/subscriptions', (req, res) => {
+app.get('/subscriptions',isAuthenticated, (req, res) => {
   const userId = req.session.passport.user.id;
 
   const sql = `
@@ -498,7 +498,7 @@ app.get('/subscriptions', (req, res) => {
   });
 });
 
-app.get('/subscriptionStatus/:userId', (req, res) => {
+app.get('/subscriptionStatus/:userId',isAuthenticated, (req, res) => {
   const currentUser = req.session.passport.user.id;
   const subscribedTo = req.params.userId;
 
@@ -523,7 +523,7 @@ if(currentUser == subscribedTo){
 }
 });
 
-app.post('/subscriptions/:userId/:action', (req, res) => {
+app.post('/subscriptions/:userId/:action',isAuthenticated, (req, res) => {
   const currentUser = req.session.passport.user.id;
   const subscribedTo = req.params.userId;
   const action = req.params.action; // 'subscribe' or 'unsubscribe'
@@ -553,7 +553,7 @@ app.post('/subscriptions/:userId/:action', (req, res) => {
 
 
 // Backend endpoint for searching posts by title
-app.get('/search', (req, res) => {
+app.get('/search',isAuthenticated, (req, res) => {
   const { query } = req.query; // Get the search query from the request
 
   // Perform a database query to search for posts by title
@@ -567,6 +567,89 @@ app.get('/search', (req, res) => {
     }
     res.json(results); // Send the search results back to the client
   });
+});
+
+
+app.get('/subscriber-posts',isAuthenticated, async (req, res) => {
+  try {
+      const subscriberId = req.session.passport.user.id;
+      
+      // Fetch IDs of users subscribed to by the subscriber
+      const subscribedUserIds = await new Promise((resolve, reject) => {
+          db.query('SELECT subscribed_to_id FROM subscriptions WHERE subscriber_id = ?', [subscriberId], (err, results) => {
+              if (err) {
+                  reject(err);
+                  return;
+              }
+              resolve(results.map(result => result.subscribed_to_id));
+          });
+      });
+
+      // Get the current date and date 5 days ago
+      const currentDate = new Date();
+      const fiveDaysAgo = new Date(currentDate);
+      fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 7);
+
+      // Fetch posts made by subscribed users in the last 5 days
+      
+      const posts = await new Promise((resolve, reject) => {
+        if(subscribedUserIds.length ===0){
+          resolve([]);
+        }
+          const sql = `
+          SELECT p.post_id,p.post_title,p.thumbURL,p.date_time, users.username
+          FROM user_posts
+          JOIN posts p ON JSON_CONTAINS(user_posts.posts, CAST(p.post_id AS JSON))
+          JOIN users ON users.id = user_posts.id
+          WHERE user_posts.id IN (?) 
+                AND p.date_time >= ?
+          ORDER BY p.date_time DESC`;
+          db.query(sql, [subscribedUserIds, fiveDaysAgo], (err, results) => {
+              if (err) {
+                  reject(err);
+                  return;
+              }
+              resolve(results);
+          });
+      });
+
+      res.json(posts);
+  } catch (error) {
+      console.error('Error fetching subscriber posts:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+app.get('/all-posts/:page', async (req, res) => {
+  const page = parseInt(req.params.page); // Extract page number from URL parameter
+
+  // Define how many posts to fetch per page
+  const postsPerPage = 5;
+
+  try {
+    // Calculate the offset based on the page number
+    const offset = (page - 1) * postsPerPage;
+
+    // Query the database to fetch posts for the given page
+    const query = `
+    SELECT p.post_id,p.post_title,p.thumbURL,p.date_time, u.username
+FROM user_posts up
+JOIN posts p ON JSON_CONTAINS(up.posts, CAST(p.post_id AS JSON))
+JOIN users u ON up.id = u.id
+ORDER BY p.date_time DESC
+LIMIT ? OFFSET ?
+    `;
+    const [rows] = await db.promise().query(query, [postsPerPage, offset]);
+
+    // Send the fetched posts as a JSON response
+    setTimeout(()=>{res.json(rows);},3000)
+    
+  } catch (error) {
+    // If there's an error, send a 500 Internal Server Error response
+    console.error('Error fetching posts:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 
