@@ -11,14 +11,9 @@ export default function Home({setSearchResults}) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const profileDrop = useRef(null);
-  const profileTab = useRef();
-  const profileEdit = useRef();
-  const profileSetting = useRef();
-  const profileLogOut = useRef();
- 
+  const searchBar = useRef(null);
 
-  const [profileClicked, setProfileClicked] = useState(false);
+ 
 
   const [query, setQuery] = useState('');
  
@@ -54,13 +49,20 @@ export default function Home({setSearchResults}) {
   
   }, []);
 
+ const handleEnterSearch= (e)=>{
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  }
+
+/*
   window.addEventListener('click',(e)=>{
       
         if((profileTab.current && !profileTab.current.contains(e.target))&&(profileDrop.current && !profileDrop.current.contains(e.target))){
           setProfileClicked(false);
         }
   })
-
+*/
   const handleLogOut = async ()=>{
 
     try{
@@ -120,7 +122,8 @@ const handleSearch = async () => {
           {/*<button onClick={()=>{navigate("feed")}} className='navbtn'>Feed</button>*/}
           {/*<button className='btn btn-secondary'>My Subscriptions</button>*/}
           <div class="input-group">
-  <input type="text"
+  <input onKeyDown={handleEnterSearch}
+        type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)} class="form-control" placeholder="Search Recipes" aria-label="Search Recipes" aria-describedby="basic-addon2"/>
   <div class="input-group-append">

@@ -21,7 +21,7 @@ export default function Feed() {
       if (newPosts.length === 0) {
         setHasMore(false); // No more posts to load
       } else {
-        setPage(prevPage => prevPage + 1);
+        
         
       }
     } catch (error) {
@@ -46,12 +46,16 @@ export default function Feed() {
 
   useEffect(() => {
     fetchSubbedPosts();
+
+    
   }, []);
-  /*
+  
   useEffect(() => {
+
     fetchNewPosts();
+    
   }, [page]);
-*/
+
   return (
     <>
     <div className="container feed_post_cont">
@@ -77,7 +81,7 @@ export default function Feed() {
     <div>
       <InfiniteScroll
         dataLength={NewPosts.length}
-        next={fetchNewPosts}
+        next={()=>{setPage(prevPage => prevPage + 1);}}
         hasMore={hasMore}
       
         loader={<div className='text-center'><img src="/Loading.svg" alt="load" style={{height: '70px', width: '70px'}}/></div>
