@@ -1,6 +1,8 @@
 import React,{useEffect, useRef, useState} from 'react';
 import { useNavigate} from 'react-router-dom';
+import '../App_media.css';
 import './Post.css';
+
 
 export default function Post() {
   //const [imgs,setImgs] = useState([]);
@@ -255,7 +257,7 @@ const newNoden = document.createElement("div");
     <div className="opts">
       
       <div className="dropdown">
-  <button className="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+  <button className="btn btn-light dropdown-toggle btp btph" type="button" data-bs-toggle="dropdown" aria-expanded="false">
     Heading
   </button>
   <ul className="dropdown-menu">
@@ -265,14 +267,14 @@ const newNoden = document.createElement("div");
     
   </ul>
 </div>
-      <button className='btn btn-light' onClick={()=>{
+      <button className='btn btn-light btp' onClick={()=>{
         createHighlight();
       }} >Highlight</button>
-      <button className='btn btn-light' onClick={()=>{
+      <button className='btn btn-light btp' onClick={()=>{
         createBullets();
-      }}>Bullets</button>
+      }}>Bullets</button> 
       <div className="dropdown">
-  <button className="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+  <button className="btn btn-light dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">
     Embed Image
   </button>
   <ul className="dropdown-menu">
@@ -282,8 +284,8 @@ const newNoden = document.createElement("div");
     </div>
   </ul>
 </div>
-<div className="dropdown">
-  <button className="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+<div className="dropdown btpe">
+  <button className="btn btn-light dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">
     Embed Video
   </button>
   <ul className="dropdown-menu">

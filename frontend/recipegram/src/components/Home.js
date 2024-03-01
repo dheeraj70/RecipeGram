@@ -121,7 +121,7 @@ const handleSearch = async () => {
         <div className="nav_elements">
           {/*<button onClick={()=>{navigate("feed")}} className='navbtn'>Feed</button>*/}
           {/*<button className='btn btn-secondary'>My Subscriptions</button>*/}
-          <div class="input-group">
+          <div class="input-group dfm">
   <input onKeyDown={handleEnterSearch}
         type="text"
         value={query}
@@ -130,8 +130,8 @@ const handleSearch = async () => {
     <button onClick={handleSearch} class="btn btn-secondary ltbbr" type="button"><i class="fas fa-search"></i></button>
   </div>
 </div>
-          <button onClick={()=>{navigate("topchefs")}} className='btn btn-secondary navbtn'>Top Chefs</button>
-          <button onClick={()=>{navigate("newpost")}} className='btn btn-secondary navbtn'>Post</button>
+          {(window.innerWidth > 480)&&(<><button onClick={()=>{navigate("topchefs")}} className='btn btn-secondary navbtn'>Top Chefs</button>
+          <button onClick={()=>{navigate("newpost")}} className='btn btn-secondary navbtn'>Post</button></>)}
           <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle profileBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
     <img className='profile_pic' src="/pro.jpg" alt="profile" />Profile
@@ -140,7 +140,9 @@ const handleSearch = async () => {
   <li><a class="dropdown-item cp" onClick={()=>{navigate("myposts")}}>My Profile</a></li>
   <li><a class="dropdown-item cp" onClick={()=>{navigate("subs")}} >My Subscriptions</a></li>
     <li><a class="dropdown-item cp" onClick={()=>{navigate("editprofile")}} >Edit Profile</a></li>
-    <li><a class="dropdown-item cp" >Settings</a></li>
+   {/* IN FUTURE VERSIONS::::
+   
+   <li><a class="dropdown-item cp" >Settings</a></li> */}
     <li><a class="dropdown-item cp" onClick={handleLogOut}>Log Out</a></li>
   </ul>
 </div>
@@ -150,6 +152,11 @@ const handleSearch = async () => {
       </div>
 {/*This outlet helps to render sub route/ nested route */}
       <Outlet />
+<div className="mobTabs">
+<button onClick={()=>{navigate("topchefs")}} className='btn btn-secondary navbtn'><i class="fa-solid fa-compass"></i> Explore</button>
+          <button onClick={()=>{navigate("newpost")}} className='btn btn-secondary navbtn'><i class="fa-solid fa-utensils"></i> Post Recipe</button>
+         
+</div>
 
 
 

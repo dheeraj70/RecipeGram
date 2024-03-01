@@ -9,6 +9,7 @@ const { Strategy } =require('passport-local');
 const cors = require('cors')
 const store = new session.MemoryStore();
 const path = require('path');
+const { off } = require('process');
 
 const app = express();
 const port = 8080;
@@ -313,13 +314,22 @@ db.query(`INSERT INTO subscribe.posts (post_cont, post_title, thumbURL, date_tim
   }
 });
 
-app.get('/user-posts',isAuthenticated,async (req,res)=>{
+app.get('/user-posts/:page',isAuthenticated,async (req,res)=>{
     const user = req.session.passport.user.id;
+    const page = parseInt(req.params.page); // Extract page number from URL parameter
+
+  // Define how many posts to fetch per page
+  const postsPerPage = 5;
+
+    // Calculate the offset based on the page number
+  const offset = (page - 1) * postsPerPage;
 
     var posts =await db.promise().query('SELECT posts FROM subscribe.user_posts where id = ?',[user])
 
     posts = (posts[0][0] === undefined)?([]):(posts[0][0].posts);
-  
+
+    posts = posts.slice(offset, offset+postsPerPage);
+
     var posts_res = [];
     for(var i of posts){
       var dat= await getPostMetadata(i);
@@ -445,27 +455,44 @@ app.get('/chefs/:chefId',isAuthenticated, async(req,res)=>{
   var userData = await getUserDetails(req.params.chefId);
   res.send(userData);
 });
-app.get('/chef-posts/:chefId',async (req,res)=>{
+app.get('/chef-posts/:chefId/:page',async (req,res)=>{
   const user = req.params.chefId;
+  const page = parseInt(req.params.page); // Extract page number from URL parameter
 
-  var posts =await db.promise().query('SELECT posts FROM subscribe.user_posts where id = ?',[user])
+  // Define how many posts to fetch per page
+  const postsPerPage = 5;
+
+    // Calculate the offset based on the page number
+  const offset = (page - 1) * postsPerPage;
+
+  var posts =await db.promise().query('SELECT posts FROM subscribe.user_posts where id = ?',[user]);
   posts = (posts[0][0] === undefined)?([]):(posts[0][0].posts);
+  posts = posts.slice(offset, offset+postsPerPage)
   //console.log(posts);
   var posts_res = [];
   for(var i of posts){
     var dat= await getPostMetadata(i);
     posts_res.push(dat);
   }
+  
 res.send(posts_res);
 
 })
 
 
-app.get('/topchefs',isAuthenticated, (req, res) => {
-  const sql = 'SELECT id, username FROM users';
+app.get('/topchefs/:page', (req, res) => {
+  const page = req.params.page;
 
+  const sql = 'SELECT id, username FROM users LIMIT ? OFFSET ?';
+
+// Define how many posts to fetch per page
+const postsPerPage = 25;
+
+// Calculate the offset based on the page number
+const offset = (page - 1) * postsPerPage;
+  
   // Execute the query
-  db.query(sql, (err, results) => {
+  db.query(sql,[postsPerPage,offset], (err, results) => {
     if (err) {
       console.error('Error executing MySQL query: ' + err.message);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -477,17 +504,25 @@ app.get('/topchefs',isAuthenticated, (req, res) => {
   });
 });
 
-app.get('/subscriptions',isAuthenticated, (req, res) => {
+app.get('/subscriptions/:page',isAuthenticated, (req, res) => {
   const userId = req.session.passport.user.id;
+  const page = req.params.page;
+
+
+// Define how many posts to fetch per page
+const postsPerPage = 25;
+
+// Calculate the offset based on the page number
+const offset = (page - 1) * postsPerPage;
 
   const sql = `
     SELECT subscriptions.subscribed_to_id as id, users.username
     FROM subscriptions
     INNER JOIN users ON subscriptions.subscribed_to_id = users.id
-    WHERE subscriptions.subscriber_id = ?
+    WHERE subscriptions.subscriber_id = ? LIMIT ? OFFSET ?
   `;
   
-  db.query(sql, [userId], (err, results) => {
+  db.query(sql, [userId,postsPerPage, offset], (err, results) => {
     if (err) {
       console.error('Error retrieving subscribers:', err);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -643,8 +678,8 @@ LIMIT ? OFFSET ?
     const [rows] = await db.promise().query(query, [postsPerPage, offset]);
 
     // Send the fetched posts as a JSON response
-    setTimeout(()=>{res.json(rows);},3000)
-    
+  
+    res.json(rows);
   } catch (error) {
     // If there's an error, send a 500 Internal Server Error response
     console.error('Error fetching posts:', error);

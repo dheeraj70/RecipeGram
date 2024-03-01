@@ -64,7 +64,7 @@ export default function EditProfile() {
   };
 
   return (
-    <div className="container">
+    <div className="container mobcont">
       <div className="propic-update mt-4">
         <img src="/pro.jpg" alt="your profile pic" className="editPropic" />
         <div className="d-flex flex-column justify-content-center">
@@ -77,7 +77,7 @@ export default function EditProfile() {
           <label htmlFor="user_name" className="col-sm-2 col-form-label col-form-label-sm editLabel">
             User Name
           </label>
-          <div className="col-sm-10 w-50">
+          <div className="col-sm-10 editWidth">
             <input
               type="text"
               className="form-control form-control-sm editTextField"
@@ -92,7 +92,7 @@ export default function EditProfile() {
           <label htmlFor="ig" className="col-sm-2 col-form-label col-form-label-sm editLabel">
             Instagram Profile
           </label>
-          <div className="col-sm-10 w-50">
+          <div className="col-sm-10 editWidth">
             <input
               name="iglink"
               type="text"
@@ -108,7 +108,7 @@ export default function EditProfile() {
           <label htmlFor="yt" className="col-sm-2 col-form-label col-form-label-sm editLabel">
             Youtube Profile
           </label>
-          <div className="col-sm-10 w-50">
+          <div className="col-sm-10 editWidth">
             <input
               name="ytlink"
               type="text"
@@ -124,7 +124,7 @@ export default function EditProfile() {
           <label htmlFor="li" className="col-sm-2 col-form-label col-form-label-sm editLabel">
             LinkedIn Profile
           </label>
-          <div className="col-sm-10 w-50">
+          <div className="col-sm-10 editWidth">
             <input
               name="lilink"
               type="text"
@@ -140,7 +140,7 @@ export default function EditProfile() {
           <label htmlFor="tweet" className="col-sm-2 col-form-label col-form-label-sm editLabel">
             Twitter Profile
           </label>
-          <div className="col-sm-10 w-50">
+          <div className="col-sm-10 editWidth">
             <input
               name="twlink"
               type="text"

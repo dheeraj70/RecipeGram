@@ -6,6 +6,31 @@ export default function MyPosts() {
   
   const [allPosts, setAllPosts]=useState([]);
   const [userDesc, setUserDesc]=useState("");
+
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+
+  const fetchPosts = async () => {
+    var newPosts=[];
+    try {
+      const response = await fetch(`http://localhost:8080/user-posts/${page}`, {
+        credentials: "include",
+      });
+      newPosts = await response.json();
+      //console.log(newPosts);
+      if (newPosts.length === 0) {
+        setHasMore(false); // No more posts to load
+      } else{
+        setPage(prevPage => prevPage + 1)
+      }
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }finally{
+      setAllPosts(prevPosts => [...prevPosts, ...newPosts]);
+    }
+  };
+
+
   useEffect(()=>{
     const fetchUserDesc = async()=>{
       const res = await fetch('http://localhost:8080/userdesc',{
@@ -15,16 +40,7 @@ export default function MyPosts() {
     setUserDesc(data);
     }
     fetchUserDesc();
-    const fetchPosts = async()=>{
-    const res = await fetch('http://localhost:8080/user-posts',{
-      
-      credentials: 'include',
-
-    })
-    var data = await res.json();
-    setAllPosts(data);
-  }
-fetchPosts();
+    fetchPosts();
 },[])
   return (
     <>
@@ -45,7 +61,8 @@ fetchPosts();
       </div>
     </div>
     
-    <PostThumbs allPosts={allPosts} listTitle={"Your Posts"}/>
+  
+    <PostThumbs allPosts={allPosts} listTitle={"Your Posts"} next={fetchPosts} hasmore={hasMore}/>
     
   </>
   )

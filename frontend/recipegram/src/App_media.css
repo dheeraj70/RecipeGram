@@ -1,0 +1,205 @@
+@media (max-width: 480px) {
+  .logimg{
+    display: none;
+  }
+  .login{
+    width: 100%;
+  }
+  .nav{
+    height: fit-content;
+    justify-content: center;
+  }
+  .nav_logo{
+    width: 75% ;
+    height: 75%;
+    margin-top: 10px;
+  }
+  .nav_elements{
+    margin-bottom: 7px;
+    margin-top: 7px;
+  }
+  .profile_pic{
+ 
+    height: 3vh;
+  }
+  .dfm{
+    min-width: 70px;
+  }
+  .mobTabs{
+    display: flex;
+    background-color: rgb(226, 226, 226);
+    width: 100%;
+    
+    position: fixed;
+    bottom: 0;
+    padding-bottom: 7px;
+    
+    justify-content: space-around;
+    padding-top: 7px;
+  }
+  .feed_post_cont{
+    margin-left: 5%;
+  margin-right: 5%;
+  width: 90%;
+  }
+  .profileDetails{
+    flex-direction: column;
+    height: fit-content;
+  }
+  .propicc{
+    margin-right: 0px;
+  }
+  .proDetails{
+    align-items: center;
+    padding-right: 0px;
+    gap: 7px;
+    padding-top: 0px;
+    width: 80%;
+  }
+  .profileDesc{
+    width: 100%;
+    justify-content: space-around;
+  }
+  .proDescOne >p{
+    margin: 0px;
+  }
+  .listview_cont{
+    width: 90%;
+    max-width: 100%;
+    
+    
+  }
+  .chefDetail{
+    overflow-x: hidden;
+    width: 100%;
+    gap:30px;
+    padding-left: 0px;
+    
+  }
+ .mobcont{
+  width: 100vw;
+ }
+ .propic-update{
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+ .editPropic{
+  width: 30vw;
+ }
+ .editText{
+  margin-right: 0%;
+  max-width: 90%;
+  white-space: nowrap;
+ }
+ .editWidth{
+  width: 50%;
+ }
+ 
+ body{
+  padding-bottom: 10vh;
+ }
+
+}
+@media (min-width: 481px) and (max-width: 1024px) {
+  .logimg{
+    display: none;
+  }
+  .login{
+    width: 100%;
+  }
+  .nav{
+    height: fit-content;
+    justify-content: center;
+  }
+  .nav_logo{
+    width: 75% ;
+    height: 75%;
+    margin-top: 10px;
+  }
+  .nav_elements{
+    margin-bottom: 7px;
+    margin-top: 7px;
+  }
+  .profile_pic{
+ 
+    height: 3vh;
+  }
+  .dfm{
+    min-width: 70px;
+  }
+  .mobTabs{
+    display: flex;
+    background-color: rgb(226, 226, 226);
+    width: 100%;
+    
+    position: fixed;
+    bottom: 0;
+    padding-bottom: 7px;
+    
+    justify-content: space-around;
+    padding-top: 7px;
+  }
+  .feed_post_cont{
+    margin-left: 12.5%;
+  margin-right: 12.5%;
+  width: 75%;
+  }
+  .profileDetails{
+    flex-direction: column;
+    height: fit-content;
+  }
+  .propicc{
+    margin-right: 0px;
+  }
+  .proDetails{
+    align-items: center;
+    padding-right: 0px;
+    gap: 7px;
+    padding-top: 0px;
+    width: 80%;
+  }
+  .profileDesc{
+    width: 100%;
+    justify-content: space-around;
+  }
+  .proDescOne >p{
+    margin: 0px;
+  }
+  .listview_cont{
+    width: 90%;
+    max-width: 100%;
+    
+    
+  }
+  .chefDetail{
+    overflow-x: hidden;
+    width: 100%;
+    gap:30px;
+    padding-left: 0px;
+    
+  }
+ .mobcont{
+  width: 100vw;
+ }
+ .propic-update{
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+ .editPropic{
+  width: 30vw;
+ }
+ .editText{
+  margin-right: 0%;
+  max-width: 90%;
+  white-space: nowrap;
+ }
+ .editWidth{
+  width: 50%;
+ }
+ 
+ body{
+  padding-bottom: 10vh;
+ }
+}

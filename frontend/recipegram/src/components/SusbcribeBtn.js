@@ -34,7 +34,7 @@ export default function SusbcribeBtn({userId}) {
 
   return (
     (isSubscribed !== "same")&&
-    <button onClick={handleSubscriptionToggle} disabled={isSubscribed === 'same'} className="btn btn-secondary w-50">
+    <button onClick={handleSubscriptionToggle} disabled={isSubscribed === 'same'} className="btn btn-secondary subBtn">
         {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
     </button>
   )
