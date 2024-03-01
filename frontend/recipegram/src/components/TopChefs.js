@@ -1,10 +1,10 @@
 import React,{useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import ListView from './ListView';
 
 
 export default function TopChefs() {
-    const navigate = useNavigate();
+
     const [users, setUsers] = useState([]);
 
     const [hasMore, setHasMore] = useState(true);

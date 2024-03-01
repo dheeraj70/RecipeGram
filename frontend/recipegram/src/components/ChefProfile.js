@@ -69,7 +69,7 @@ export default function ChefProfile() {
               </div>
               <div className="proDescOne">
                 <h2 className="proDescHead">
-                  <i class="fa-solid fa-star"></i>5
+                  <i className="fa-solid fa-star"></i>5
                 </h2>
                 <p>Rating</p>
               </div>
@@ -78,16 +78,16 @@ export default function ChefProfile() {
             </div>
             <div className="proSocial">
               <a href={userDesc.iglink}>
-                <i class="fa-brands fa-square-instagram"></i>
+                <i className="fa-brands fa-square-instagram"></i>
               </a>
               <a href={userDesc.ytlink}>
-                <i class="fa-brands fa-square-youtube"></i>
+                <i className="fa-brands fa-square-youtube"></i>
               </a>
               <a href={userDesc.lilink}>
-                <i class="fa-brands fa-linkedin"></i>
+                <i className="fa-brands fa-linkedin"></i>
               </a>
               <a href={userDesc.twlink}>
-                <i class="fa-brands fa-square-twitter"></i>
+                <i className="fa-brands fa-square-twitter"></i>
               </a>
             </div>
             <div className="text-center">

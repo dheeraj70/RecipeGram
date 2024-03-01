@@ -17,7 +17,7 @@ export default function Feed() {
     try {
       const response = await fetch(`http://localhost:8080/all-posts/${page}`);
       newPosts = await response.json();
-      console.log(newPosts);
+      //console.log(newPosts);
       if (newPosts.length === 0) {
         setHasMore(false); // No more posts to load
       } else {
@@ -39,7 +39,7 @@ export default function Feed() {
       credentials: "include"
     })
     var dat = await res.json();
-    console.log(dat);
+    //console.log(dat);
     setSubbedPosts(dat);
   }
 
@@ -63,12 +63,12 @@ export default function Feed() {
     <h5 className='text-center mt-3'>Posts from your subscriptions</h5>
       {subbedPosts.map((post)=>{
         return(
-          <div class="card mb-3 mt-3 cp" onClick={()=>{navigate(`/home/post/${post.post_id}`)}}>
-  <img class="card-img-top feed_img" src={(post.thumbURL=== null)?('/noimg.svg'):(post.thumbURL)} alt="Card image cap"/>
-  <div class="card-body">
-    <h5 class="card-title mb-1">{post.post_title}</h5>
-    <p class="card-text mb-1">{`Author: ${post.username}`}</p>
-    <p class="card-text"><small class="text-muted">{`Date posted: ${ new Date(post.date_time).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`}</small></p>
+          <div key={post.post_id} className="card mb-3 mt-3 cp" onClick={()=>{navigate(`/home/post/${post.post_id}`)}}>
+  <img className="card-img-top feed_img" src={(post.thumbURL=== null)?('/noimg.svg'):(post.thumbURL)} alt="Card image cap"/>
+  <div className="card-body">
+    <h5 className="card-title mb-1">{post.post_title}</h5>
+    <p className="card-text mb-1">{`Author: ${post.username}`}</p>
+    <p className="card-text"><small className="text-muted">{`Date posted: ${ new Date(post.date_time).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`}</small></p>
   </div>
 </div>
 
@@ -91,12 +91,12 @@ export default function Feed() {
       >
         {NewPosts.map((post)=>{
         return(
-          <div class="card mb-3 mt-3 cp" onClick={()=>{navigate(`/home/post/${post.post_id}`)}}>
-  <img class="card-img-top feed_img" src={(post.thumbURL=== null)?('/noimg.svg'):(post.thumbURL)} alt="Card image cap"/>
-  <div class="card-body">
-    <h5 class="card-title mb-1">{post.post_title}</h5>
-    <p class="card-text mb-1">{`Author: ${post.username}`}</p>
-    <p class="card-text"><small class="text-muted">{`Date posted: ${ new Date(post.date_time).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`}</small></p>
+          <div key={post.post_id} className="card mb-3 mt-3 cp" onClick={()=>{navigate(`/home/post/${post.post_id}`)}}>
+  <img className="card-img-top feed_img" src={(post.thumbURL=== null)?('/noimg.svg'):(post.thumbURL)} alt="Card image cap"/>
+  <div className="card-body">
+    <h5 className="card-title mb-1">{post.post_title}</h5>
+    <p className="card-text mb-1">{`Author: ${post.username}`}</p>
+    <p className="card-text"><small className="text-muted">{`Date posted: ${ new Date(post.date_time).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`}</small></p>
   </div>
 </div>
 

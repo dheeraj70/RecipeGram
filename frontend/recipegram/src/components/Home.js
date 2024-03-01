@@ -105,7 +105,7 @@ const handleSearch = async () => {
         credentials:'include'
       });
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
       setSearchResults(data); // Update search results state with the response from the backend
       navigate("search")
     } catch (error) {
@@ -121,29 +121,29 @@ const handleSearch = async () => {
         <div className="nav_elements">
           {/*<button onClick={()=>{navigate("feed")}} className='navbtn'>Feed</button>*/}
           {/*<button className='btn btn-secondary'>My Subscriptions</button>*/}
-          <div class="input-group dfm">
+          <div className="input-group dfm">
   <input onKeyDown={handleEnterSearch}
         type="text"
         value={query}
-        onChange={(e) => setQuery(e.target.value)} class="form-control" placeholder="Search Recipes" aria-label="Search Recipes" aria-describedby="basic-addon2"/>
-  <div class="input-group-append">
-    <button onClick={handleSearch} class="btn btn-secondary ltbbr" type="button"><i class="fas fa-search"></i></button>
+        onChange={(e) => setQuery(e.target.value)} className="form-control" placeholder="Search Recipes" aria-label="Search Recipes" aria-describedby="basic-addon2"/>
+  <div className="input-group-append">
+    <button onClick={handleSearch} className="btn btn-secondary ltbbr" type="button"><i className="fas fa-search"></i></button>
   </div>
 </div>
-          {(window.innerWidth > 480)&&(<><button onClick={()=>{navigate("topchefs")}} className='btn btn-secondary navbtn'>Top Chefs</button>
+          {(window.innerWidth > 1024)&&(<><button onClick={()=>{navigate("topchefs")}} className='btn btn-secondary navbtn'>Top Chefs</button>
           <button onClick={()=>{navigate("newpost")}} className='btn btn-secondary navbtn'>Post</button></>)}
-          <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle profileBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <div className="dropdown">
+  <button className="btn btn-secondary dropdown-toggle profileBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
     <img className='profile_pic' src="/pro.jpg" alt="profile" />Profile
   </button>
-  <ul class="dropdown-menu">
-  <li><a class="dropdown-item cp" onClick={()=>{navigate("myposts")}}>My Profile</a></li>
-  <li><a class="dropdown-item cp" onClick={()=>{navigate("subs")}} >My Subscriptions</a></li>
-    <li><a class="dropdown-item cp" onClick={()=>{navigate("editprofile")}} >Edit Profile</a></li>
+  <ul className="dropdown-menu">
+  <li><a className="dropdown-item cp" onClick={()=>{navigate("myposts")}}>My Profile</a></li>
+  <li><a className="dropdown-item cp" onClick={()=>{navigate("subs")}} >My Subscriptions</a></li>
+    <li><a className="dropdown-item cp" onClick={()=>{navigate("editprofile")}} >Edit Profile</a></li>
    {/* IN FUTURE VERSIONS::::
    
-   <li><a class="dropdown-item cp" >Settings</a></li> */}
-    <li><a class="dropdown-item cp" onClick={handleLogOut}>Log Out</a></li>
+   <li><a className="dropdown-item cp" >Settings</a></li> */}
+    <li><a className="dropdown-item cp" onClick={handleLogOut}>Log Out</a></li>
   </ul>
 </div>
           
@@ -153,8 +153,8 @@ const handleSearch = async () => {
 {/*This outlet helps to render sub route/ nested route */}
       <Outlet />
 <div className="mobTabs">
-<button onClick={()=>{navigate("topchefs")}} className='btn btn-secondary navbtn'><i class="fa-solid fa-compass"></i> Explore</button>
-          <button onClick={()=>{navigate("newpost")}} className='btn btn-secondary navbtn'><i class="fa-solid fa-utensils"></i> Post Recipe</button>
+<button onClick={()=>{navigate("topchefs")}} className='btn btn-secondary navbtn'><i className="fa-solid fa-compass"></i> Explore</button>
+          <button onClick={()=>{navigate("newpost")}} className='btn btn-secondary navbtn'><i className="fa-solid fa-utensils"></i> Post Recipe</button>
          
 </div>
 

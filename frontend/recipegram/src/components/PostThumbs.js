@@ -23,7 +23,7 @@ export default function PostThumbs({allPosts, listTitle, next, hasmore}) {
         <div className="container mt-4">
     <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
       {allPosts.map((i)=>{
-      return(<div onClick={()=>{navigate(`/home/post/${i.post_id}`)}} className="col d-flex justify-content-center"><Card title={i.post_title} backImg={(i.thumbURL=== null)?('/noimg.svg'):(i.thumbURL)}/></div>)
+      return(<div key={i.post_id} onClick={()=>{navigate(`/home/post/${i.post_id}`)}} className="col d-flex justify-content-center"><Card title={i.post_title} backImg={(i.thumbURL=== null)?('/noimg.svg'):(i.thumbURL)}/></div>)
     })}
        
      </div>

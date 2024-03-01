@@ -51,11 +51,11 @@ export default function MyPosts() {
         <h1 className="proName">{userDesc.username}</h1>
         <div className="profileDesc">
           <div className="proDescOne"><h2 className='proDescHead'>{userDesc.postsCount}</h2><p>Recipes made</p></div>
-          <div className="proDescOne"><h2 className='proDescHead'><i class="fa-solid fa-star"></i>5</h2><p>Rating</p></div>
+          <div className="proDescOne"><h2 className='proDescHead'><i className="fa-solid fa-star"></i>5</h2><p>Rating</p></div>
           <div className="proDescOne"><h2 className='proDescHead'>{userDesc.subCount}</h2><p>Subscribers</p></div>
 
         </div>
-        <div className="proSocial"><a href={userDesc.iglink}><i class="fa-brands fa-square-instagram"></i></a><a href={userDesc.ytlink}><i class="fa-brands fa-square-youtube"></i></a><a href={userDesc.lilink}><i class="fa-brands fa-linkedin"></i></a><a href={userDesc.twlink}><i class="fa-brands fa-square-twitter"></i></a></div>
+        <div className="proSocial"><a href={userDesc.iglink}><i className="fa-brands fa-square-instagram"></i></a><a href={userDesc.ytlink}><i className="fa-brands fa-square-youtube"></i></a><a href={userDesc.lilink}><i className="fa-brands fa-linkedin"></i></a><a href={userDesc.twlink}><i className="fa-brands fa-square-twitter"></i></a></div>
 
         </div> 
       </div>
