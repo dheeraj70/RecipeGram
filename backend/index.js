@@ -284,7 +284,7 @@ db.query(`INSERT INTO subscribe.posts (post_cont, post_title, thumbURL, date_tim
 
     // If user doesn't exist, insert a new row
     if (results.length === 0) {
-      db.query('INSERT INTO subscribe.user_posts (id, posts) VALUES (?, ?)', [user_id, [postId]], (error, results, fields) => {
+      db.query('INSERT INTO subscribe.user_posts (id, posts) VALUES (?, CAST(? AS JSON))', [user_id, JSON.stringify([postId])], (error, results, fields) => {
         if (error) {
           console.error('Error inserting new row: ', error);
           return;

@@ -132,6 +132,16 @@
         
         margin-left: 30px;
     }
+    .img-container{
+    
+        padding: 10px 10% 10px 10%;
+    
+    }
+    .vid-container{
+    
+        padding: 10px 5% 10px 5%;
+        height: 200px;
+    }
  }
 
  @media (min-width: 481px) and (max-width: 1024px) {
@@ -162,5 +172,15 @@
     .btpe{
         
         margin-left: 30px;
+    }
+    .img-container{
+    
+        padding: 10px 20% 10px 20%;
+    
+    }
+    .vid-container{
+    
+        padding: 10px 10% 10px 10%;
+        height: 300px;
     }
  }
