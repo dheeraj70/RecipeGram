@@ -39,13 +39,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'pass123',
-    database: 'subscribe',
+const db = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: 'pass123',
+  database: 'subscribe',
+  waitForConnections: true,
+  connectionLimit: 50, 
+  queueLimit: 0
   });
-  
+  /*
   db.connect((err) => {
     if (err) {
       console.error('Database connection failed:', err);
@@ -53,7 +56,7 @@ const db = mysql.createConnection({
     }
     console.log('Connected to MySQL database');
   });
-
+*/
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads/')
