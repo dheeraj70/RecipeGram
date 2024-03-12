@@ -21,14 +21,17 @@ Live here: https://recipegram.site/
 
 ### Installation:
 1. Clone the repository: `git clone https://github.com/dheeraj70/RecipeGram`
-2. Navigate to the backend folder: `cd backend`
-3. Install backend dependencies: `npm install`
-4. Set up MySQL database `subscribe`
-5. Run backend server: `node index.js`
-6. Navigate to the frontend folder: `cd ../frontend/recipegram`
-7. Install frontend dependencies: `npm install`
-8. Run frontend server: `npm start`
-9. Open your browser and navigate to `http://localhost:3000` to view the app.
+2. Open config.js and rename the host, user, password according to your local mysql server.
+3. Open CLI and run `mysql -u <your_username> -p` then enter your password.
+4. Run `source script.sql`. This will load sample data which is needed for project to run.
+5. Alternatively you can run the script.sql on Mysql Workbench.
+6. Navigate to the backend folder: `cd backend`
+7. Install backend dependencies: `npm install`
+8. Run backend server: `node index.js`
+9. Navigate to the frontend folder: `cd ../frontend/recipegram`
+10. Install frontend dependencies: `npm install`
+11. Run frontend server: `npm start`
+12. Open your browser and navigate to `http://localhost:3000` to view the app.
 
 ### Contributing:
 Contributions are welcome! Feel free to submit bug reports, feature requests, or pull requests to help improve RecipeGram.

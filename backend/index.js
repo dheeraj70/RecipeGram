@@ -10,6 +10,7 @@ const cors = require('cors')
 const store = new session.MemoryStore();
 const path = require('path');
 const { off } = require('process');
+const config = require('../config.js');
 
 const app = express();
 const port = 8080;
@@ -39,15 +40,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-const db = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'pass123',
-  database: 'subscribe',
-  waitForConnections: true,
-  connectionLimit: 50, 
-  queueLimit: 0
-  });
+const db = mysql.createPool(config.database);
   /*
   db.connect((err) => {
     if (err) {
